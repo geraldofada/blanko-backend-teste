@@ -141,17 +141,19 @@ const remove = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const { email, newName, newEmail } = req.body;
+  const { id, newName, newEmail } = req.body;
 
   const schema = yup.object().shape({
-    email: yup.string().email('O campo email precisa ser válido.').required('O campo email é obrigatório.'),
-    newName: yup.string(),
-    newEmail: yup.string().email('O campo email precisa ser válido.'),
+    id: yup.string().required('O campo id é obrigatório.'),
+    newName: yup.string().min(1),
+    newEmail: yup.string().min(1).email('O campo email precisa ser válido.'),
   });
+
+  console.log(newEmail);
 
   try {
     await schema.validate({
-      email,
+      id,
       newName,
       newEmail,
     }, { abortEarly: false });
@@ -162,7 +164,7 @@ const update = async (req, res) => {
         name: newName,
       },
       {
-        where: { email },
+        where: { id },
       }
     );
 
@@ -173,14 +175,15 @@ const update = async (req, res) => {
       return res.json({
         'status': 'success',
         'data': {
-            'put': `Usuário ${email} atualizado com sucesso.`
+            'put': `Usuário atualizado com sucesso.`
         }
       });
     } else {
+      res.status(400);
       return res.json({
         'status': 'fail',
         'data': {
-            'email': 'O email não existe.'
+            'id': 'O usuário não existe ou nenhum campo foi passado.'
         }
       });
     }
@@ -209,6 +212,7 @@ const update = async (req, res) => {
       });
 
     } else {
+      console.log(e);
       res.status(500);
       return res.json({
         'status': 'error',
