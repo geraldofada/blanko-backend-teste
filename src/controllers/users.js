@@ -149,8 +149,6 @@ const update = async (req, res) => {
     newEmail: yup.string().min(1).email('O campo email precisa ser válido.'),
   });
 
-  console.log(newEmail);
-
   try {
     await schema.validate({
       id,
@@ -212,7 +210,6 @@ const update = async (req, res) => {
       });
 
     } else {
-      console.log(e);
       res.status(500);
       return res.json({
         'status': 'error',
