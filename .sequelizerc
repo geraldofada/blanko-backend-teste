@@ -2,6 +2,6 @@ const path = require('path');
 require('dotenv').config();
 
 module.exports = {
-  'migration-path': path.resolve(__dirname, 'src', 'database', 'migrations'),
+  'migrations-path': path.resolve(__dirname, 'src', 'database', 'migrations'),
   'url': process.env.JAWSDB_MARIA_URL,
 };
