@@ -41,6 +41,7 @@ const create = async (req, res) => {
       where: { email },
     });
     if (user !== null) {
+      res.status(400);
       return res.json({
         'status': 'fail',
         'data': {
