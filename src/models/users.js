@@ -1,5 +1,4 @@
 const { DataTypes } = require('sequelize');
-const yup = require('yup');
 
 const sequelize = require('../database');
 
@@ -14,12 +13,6 @@ const User = sequelize.define('User', {
   }
 });
 
-const UserValidation = yup.object().shape({
-  name: yup.string().required(),
-  email: yup.string().email().required(),
-});
-
 module.exports = {
   User,
-  UserValidation,
 };

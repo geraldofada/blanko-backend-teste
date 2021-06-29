@@ -1,6 +1,6 @@
 const yup = require('yup');
 
-const { User, UserValidation } = require('../models/users');
+const User = require('../models/users');
 
 const getAll = async (req, res) => {
   try {
@@ -17,7 +17,7 @@ const getAll = async (req, res) => {
     res.status(500);
     return res.json({
       'status': 'error',
-      'message': 'An internal error occurred.',
+      'message': 'Um erro interno ocorreu.',
       'details': e,
     });
   }
@@ -25,11 +25,17 @@ const getAll = async (req, res) => {
 
 const create = async (req, res) => {
   const { name, email } = req.body;
+
+  const schema = yup.object().shape({
+    name: yup.string().required('O campo nome é obrigatório.'),
+    email: yup.string().email('O campo email precisa ser válido.').required('O campo email é obrigatório.'),
+  });
+
   try {
-    await UserValidation.validate({
+    await schema.validate({
       name,
       email
-    });
+    }, { abortEarly: false });
 
     const user = await User.create({name, email});
 
@@ -45,6 +51,7 @@ const create = async (req, res) => {
       const validationError = {};
 
       e.inner.forEach(error => {
+        console.log(error.path);
         validationError[error.path] = error.message;
       });
 
@@ -58,11 +65,15 @@ const create = async (req, res) => {
       res.status(500);
       return res.json({
         'status': 'error',
-        'message': 'An internal error occurred.',
+        'message': 'Um erro interno ocorreu.',
         'details': e,
       });
     }
   }
+};
+
+const remove = async (req, res) => {
+
 };
 
 module.exports = {
